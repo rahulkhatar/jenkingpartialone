@@ -3,11 +3,12 @@ node {
     checkout scm
   }
   stage('SonarQube Analysis') {
-    def scannerHome = tool 'SonarScanner for .NET'
+    # def scannerHome = tool 'SonarScanner for .NET'
     withSonarQubeEnv() {
-      bat "dotnet ${scannerHome}\\SonarScanner.MSBuild.dll begin /k:\"JenkinsPartialOne\""
+      # bat "dotnet ${scannerHome}\\SonarScanner.MSBuild.dll begin /k:\"JenkinsPartialOne\""
+      bat "dotnet sonarscanner begin /k:"JenkinsPartialOne\""
       bat "dotnet build"
-      bat "dotnet ${scannerHome}\\SonarScanner.MSBuild.dll end"
+      bat "dotnet sonarscanner end"
     }
   }
 }
