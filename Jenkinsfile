@@ -4,7 +4,7 @@ node {
   }
   stage('SonarQube Analysis') {
     withSonarQubeEnv() {
-      bat "dotnet sonarscanner begin /k:"JenkinsPartialOne\""
+      bat "dotnet sonarscanner begin /k:"JenkinsPartialOne""
       bat "dotnet build"
       bat "dotnet sonarscanner end"
     }
