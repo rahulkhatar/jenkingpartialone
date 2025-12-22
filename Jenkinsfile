@@ -26,7 +26,7 @@ node {
 
   stage('Publish') {
     bat '''
-      dotnet publish -c Release -o publish
+      dotnet publish -c Release -o publish /p:PublishReadyToRun=true /p:UseAppHost=true
       powershell -Command "Remove-Item publish\\app.zip -ErrorAction SilentlyContinue"
       powershell -Command "cd publish; Compress-Archive -Path * -DestinationPath ..\\publish\\app.zip -Force"
     '''
