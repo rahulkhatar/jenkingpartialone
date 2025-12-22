@@ -32,12 +32,28 @@ node {
   }
 
   stage('Deploy to Azure Web App') {
-  azureWebAppPublish(
-    azureCredentialsId: 'azure-sp-restaurant-dev',
-    resourceGroup: 're-restaurant-dev',
-    appName: 'restaurant-api-dev',
-    sourceDirectory: 'publish'
-  )
+  withCredentials([
+    string(credentialsId: 'azure-client-id', variable: 'AZ_CLIENT_ID'),
+    string(credentialsId: 'azure-client-secret', variable: 'AZ_CLIENT_SECRET'),
+    string(credentialsId: 'azure-tenant-id', variable: 'AZ_TENANT_ID'),
+    string(credentialsId: 'azure-subscription-id', variable: 'AZ_SUBSCRIPTION_ID')
+  ]) {
+    bat '''
+      az login --service-principal ^
+        --username %AZ_CLIENT_ID% ^
+        --password %AZ_CLIENT_SECRET% ^
+        --tenant %AZ_TENANT_ID%
+
+      az account set --subscription %AZ_SUBSCRIPTION_ID%
+
+      az webapp deploy ^
+        --resource-group rg-restaurant-dev ^
+        --name restaurant-api-dev ^
+        --src-path publish\\app.zip ^
+        --type zip
+    '''
+  }
 }
+
 
 }
