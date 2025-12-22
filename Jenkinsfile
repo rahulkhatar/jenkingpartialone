@@ -2,15 +2,24 @@ node {
   stage('Checkout') {
     checkout scm
   }
+
   stage('SonarQube Analysis') {
-    withSonarQubeEnv() {
+    withSonarQubeEnv('SonarQubeServer') {
       bat '''
         dotnet sonarscanner begin ^
         /k:"JenkinsPartialOne" ^
-        /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml"
+        /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
       '''
+
       bat 'dotnet build'
-      bat 'dotnet test --collect:"XPlat Code Coverage"'
+
+      bat '''
+        dotnet test ^
+        /p:CollectCoverage=true ^
+        /p:CoverletOutputFormat=opencover ^
+        /p:CoverletOutput=TestResults/coverage.opencover.xml
+      '''
+
       bat 'dotnet sonarscanner end'
     }
   }
