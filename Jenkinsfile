@@ -49,7 +49,7 @@ node {
 
         echo Deploying to Azure Web App...
         az webapp deploy ^
-          --resource-group rg-restaurant-dev ^
+          --resource-group rg-restaurants-dev ^
           --name restaurant-api-dev ^
           --src-path publish\\app.zip ^
           --type zip
