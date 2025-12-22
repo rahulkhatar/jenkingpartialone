@@ -24,13 +24,35 @@ node {
     }
   }
 
-  stage('Deploy to Azure Web App') {
-  withCredentials([string(credentialsId: 'azure-sp-restaurant-dev', variable: 'AZURE_CREDENTIALS')]) {
+  stage('Publish') {
     bat '''
-      echo %AZURE_CREDENTIALS% > azureauth.json
-      az login --service-principal --username $(jq -r '.clientId' azureauth.json) --password $(jq -r '.clientSecret' azureauth.json) --tenant $(jq -r '.tenantId' azureauth.json)
-      az webapp deploy --resource-group myResourceGroup --name restaurant-dev --src-path path\\to\\your\\package.zip
+      dotnet publish -c Release -o publish
+      powershell Compress-Archive -Path publish\\* -DestinationPath publish\\app.zip -Force
     '''
   }
-}
+
+  stage('Deploy to Azure Web App') {
+    withCredentials([
+      string(credentialsId: 'azure-client-id', variable: 'AZ_CLIENT_ID'),
+      string(credentialsId: 'azure-client-secret', variable: 'AZ_CLIENT_SECRET'),
+      string(credentialsId: 'azure-tenant-id', variable: 'AZ_TENANT_ID'),
+      string(credentialsId: 'azure-subscription-id', variable: 'AZ_SUBSCRIPTION_ID')
+    ]) {
+      bat '''
+        az login --service-principal ^
+          --username %AZ_CLIENT_ID% ^
+          --password %AZ_CLIENT_SECRET% ^
+          --tenant %AZ_TENANT_ID%
+
+        az account set --subscription %AZ_SUBSCRIPTION_ID%
+
+        az webapp deploy ^
+          --resource-group myResourceGroup ^
+          --name restaurant-dev ^
+          --src-path publish\\app.zip ^
+          --type zip
+      '''
+    }
+  }
+
 }
