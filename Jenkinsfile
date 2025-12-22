@@ -33,10 +33,10 @@ node {
 
   stage('Deploy to Azure Web App') {
   withCredentials([
-    string(credentialsId: 'azure-client-id', variable: 'AZ_CLIENT_ID'),
-    string(credentialsId: 'azure-client-secret', variable: 'AZ_CLIENT_SECRET'),
-    string(credentialsId: 'azure-tenant-id', variable: 'AZ_TENANT_ID'),
-    string(credentialsId: 'azure-subscription-id', variable: 'AZ_SUBSCRIPTION_ID')
+    string(credentialsId: '5b96e347-9411-441b-8de1-519b40c3546f'),
+    string(credentialsId: 'Ztz8Q~f4a7IvFo3euo2sQL8CI1.HC2PYSXoeUaZq'),
+    string(credentialsId: '4250280e-1ebf-49e4-8d2d-03a2d5fdb38b'),
+    string(credentialsId: '7704f293-e06d-4c3e-9c65-423d08206b48')
   ]) {
     bat '''
       az login --service-principal ^
