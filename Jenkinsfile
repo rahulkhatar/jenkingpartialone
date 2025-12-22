@@ -3,7 +3,7 @@ node {
     checkout scm
   }
   stage('SonarQube Analysis') {
-    withSonarQubeEnv('SonarQube') {
+    withSonarQubeEnv() {
       bat '''
         dotnet sonarscanner begin ^
         /k:"JenkinsPartialOne" ^
