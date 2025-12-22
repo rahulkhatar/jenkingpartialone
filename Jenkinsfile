@@ -27,9 +27,10 @@ node {
   stage('Publish') {
     bat '''
       dotnet publish -c Release -o publish
-      powershell Compress-Archive -Path publish\\* -DestinationPath publish\\app.zip -Force
+      powershell -Command "Remove-Item publish\\app.zip -ErrorAction SilentlyContinue"
+      powershell -Command "cd publish; Compress-Archive -Path * -DestinationPath ..\\publish\\app.zip -Force"
     '''
-  }
+}
 
   stage('Deploy to Azure Web App') {
     withCredentials([
