@@ -29,7 +29,7 @@ node {
     stage('Publish') {
         bat '''
             echo Publishing .NET app...
-            dotnet publish -c Release -o publish /p:PublishReadyToRun=true /p:UseAppHost=true
+            dotnet publish -c Release -o publish /p:DeployOnBuild=true /p:WebPublishMethod=Package
 
             echo Zipping publish folder for Azure Web App...
             powershell -Command "Remove-Item publish\\app.zip -ErrorAction SilentlyContinue"
