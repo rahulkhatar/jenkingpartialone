@@ -9,6 +9,7 @@ using Revision_Part_1.Infrastructure.Constants;
 
 namespace Revision_Part_1.Controllers;
 
+//controller name
 [Route("api/[controller]")]
 [ApiController]
 /*public class RestaurantsController(RestaurantServiceAdditionalLayer _additionalRestaurantService) : ControllerBase
