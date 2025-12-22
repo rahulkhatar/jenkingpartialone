@@ -5,7 +5,7 @@ node {
     }
 
     stage('SonarQube Analysis') {
-        // Replace '' with your SonarQube server name configured in Jenkins
+        // Replace 'MySonarQubeServer' with your Jenkins SonarQube server name
         withSonarQubeEnv('') {
             bat '''
                 dotnet sonarscanner begin ^
