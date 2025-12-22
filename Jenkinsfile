@@ -1,23 +1,24 @@
 node {
+
   stage('Checkout') {
     checkout scm
   }
 
   stage('SonarQube Analysis') {
-    withSonarQubeEnv('') {
+    withSonarQubeEnv('SonarQubeServer') {
       bat '''
         dotnet sonarscanner begin ^
-        /k:"JenkinsPartialOne" ^
-        /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+          /k:"JenkinsPartialOne" ^
+          /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
       '''
 
       bat 'dotnet build'
 
       bat '''
         dotnet test ^
-        /p:CollectCoverage=true ^
-        /p:CoverletOutputFormat=opencover ^
-        /p:CoverletOutput=TestResults/coverage.opencover.xml
+          /p:CollectCoverage=true ^
+          /p:CoverletOutputFormat=opencover ^
+          /p:CoverletOutput=TestResults/coverage.opencover.xml
       '''
 
       bat 'dotnet sonarscanner end'
@@ -26,11 +27,17 @@ node {
 
   stage('Publish') {
     bat '''
+      echo Publishing .NET app...
       dotnet publish -c Release -o publish /p:PublishReadyToRun=true /p:UseAppHost=true
+
+      echo Zipping publish folder for Azure Web App...
       powershell -Command "Remove-Item publish\\app.zip -ErrorAction SilentlyContinue"
       powershell -Command "cd publish; Compress-Archive -Path * -DestinationPath ..\\publish\\app.zip -Force"
+
+      echo Published files:
+      dir publish
     '''
-}
+  }
 
   stage('Deploy to Azure Web App') {
     withCredentials([
@@ -54,9 +61,10 @@ node {
           --name restaurant-api-dev ^
           --src-path publish\\app.zip ^
           --type zip
+
+        echo Deployment complete. Verify your API URL.
       '''
     }
   }
-
 
 }
