@@ -6,7 +6,7 @@ node {
 
     stage('SonarQube Analysis') {
         // Replace '' with your SonarQube server name configured in Jenkins
-        withSonarQubeEnv('MySonarQubeServer') {
+        withSonarQubeEnv('') {
             bat '''
                 dotnet sonarscanner begin ^
                   /k:"JenkinsPartialOne" ^
