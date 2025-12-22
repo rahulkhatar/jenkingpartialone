@@ -100,7 +100,7 @@ public class RestaurantsController(IMediator _additionalRestaurantService) : Con
         //return NotFound();
     }
 
-    //BlobStorage azure
+    //BlobStorage azure pipeline
     [HttpPost("{id}/logo")]
     public async Task<IActionResult> UploadLogo([FromRoute] int id, IFormFile file)
     {
