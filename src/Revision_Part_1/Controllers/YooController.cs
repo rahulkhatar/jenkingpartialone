@@ -7,6 +7,7 @@ namespace Revision_Part_1.Controllers
     [ApiController]
     public class YooController : ControllerBase
     {
+        //Pipeline test
         [HttpGet]
         public IActionResult Get()
         {
